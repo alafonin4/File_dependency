@@ -73,11 +73,19 @@ public class Operations {
                 Pattern pattern = Pattern.compile("require '.+?'");
                 Matcher matcher = pattern.matcher(str);
                 while (matcher.find()) {
-                    String p = path + "\\" + str.substring(matcher.start() + 9, matcher.end() - 1);
-                    file.add(p);
+                    String partOfPath = str.substring(matcher.start() + 9, matcher.end() - 1);
+                    if ((partOfPath.contains("\\"))
+                            && (File.pathSeparatorChar == '/')) {
+                        partOfPath = partOfPath.replace('/', '\\');
+                    }
+                    if ((partOfPath.contains("/"))
+                            && (File.pathSeparatorChar == '\\')) {
+                        partOfPath = partOfPath.replace('/', '\\');
+                    }
+                    String allPath = path + partOfPath;
+                    file.add(allPath);
                 }
             }
-            System.out.println(file.getFilesWhichDepends().size());
         }
         List<FilesInformation> filesIndirs1 = new ArrayList<FilesInformation>(0);
         filesIndirs1.addAll(filesWithoutDep);
